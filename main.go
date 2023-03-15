@@ -26,6 +26,10 @@ var (
 )
 
 func main() {
+	if access_token == "" && puid == "" {
+		println("Error: ACCESS_TOKEN and PUID are not set")
+		return
+	}
 	// Automatically refresh the puid cookie
 	if access_token != "" {
 		go func() {
