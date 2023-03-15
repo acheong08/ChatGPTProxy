@@ -45,7 +45,7 @@ func proxy(c *gin.Context) {
 	var request *http.Request
 	var response *http.Response
 
-	url = "https://api.openai.com" + c.Param("path")
+	url = "https://api.openai.com/api" + c.Param("path")
 	request_method = c.Request.Method
 
 	request, err = http.NewRequest(request_method, url, c.Request.Body)
@@ -53,13 +53,9 @@ func proxy(c *gin.Context) {
 		c.JSON(500, gin.H{"error": err.Error()})
 		return
 	}
-	request.Header.Set("Host", "chat.openai.com")
-	request.Header.Set("Origin", "https://chat.openai.com/chat")
-	request.Header.Set("Content-Type", "application/json")
-	request.Header.Set("Connection", "keep-alive")
-	request.Header.Set("Keep-Alive", "timeout=360")
-	request.Header.Set("user-agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36")
-	request.Header.Set("Authorization", c.Request.Header.Get("Authorization"))
+	for key, value := range c.Request.Header {
+		request.Header.Set(key, value[0])
+	}
 	response, err = client.Do(request)
 	if err != nil {
 		c.JSON(500, gin.H{"error": err.Error()})
