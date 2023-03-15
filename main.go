@@ -27,7 +27,7 @@ var (
 
 func main() {
 	// Automatically refresh the puid cookie
-	if access_token == "" {
+	if access_token != "" {
 		go func() {
 			url := "https://chat.openai.com/backend-api/models"
 			req, _ := http.NewRequest(http.MethodGet, url, nil)
