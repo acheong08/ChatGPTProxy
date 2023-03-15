@@ -3,7 +3,6 @@ package main
 import (
 	"io"
 	"os"
-	"time"
 
 	http "github.com/bogdanfinn/fhttp"
 	tls_client "github.com/bogdanfinn/tls-client"
@@ -20,61 +19,10 @@ var (
 		tls_client.WithNotFollowRedirects(),
 		tls_client.WithCookieJar(jar), // create cookieJar instance and pass it as argument
 	}
-	client, _    = tls_client.NewHttpClient(tls_client.NewNoopLogger(), options...)
-	access_token = os.Getenv("ACCESS_TOKEN")
-	puid         = os.Getenv("PUID")
+	client, _ = tls_client.NewHttpClient(tls_client.NewNoopLogger(), options...)
 )
 
 func main() {
-	// Automatically refresh the puid cookie
-	if access_token != "" {
-		go func() {
-			url := "https://chat.openai.com/backend-api/models"
-			req, _ := http.NewRequest(http.MethodGet, url, nil)
-			req.Header.Set("Host", "chat.openai.com")
-			req.Header.Set("origin", "https://chat.openai.com/chat")
-			req.Header.Set("content-type", "application/json")
-			req.Header.Set("user-agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36")
-			// Set authorization header
-			req.Header.Set("Authorization", "Bearer "+access_token)
-			// Initial puid cookie
-			req.AddCookie(
-				&http.Cookie{
-					Name:  "_puid",
-					Value: puid,
-				},
-			)
-			for {
-				resp, err := client.Do(req)
-				if err != nil {
-					break
-				}
-				defer resp.Body.Close()
-				println("Got response: " + resp.Status)
-				if resp.StatusCode != 200 {
-					println("Error: " + resp.Status)
-					// Print response body
-					body, _ := io.ReadAll(resp.Body)
-					println(string(body))
-					break
-				}
-				// Get cookies from response
-				cookies := resp.Cookies()
-				// Find _puid cookie
-				for _, cookie := range cookies {
-					if cookie.Name == "_puid" {
-						puid = cookie.Value
-						println("puid: " + puid)
-						break
-					}
-				}
-				// Sleep for 6 hour
-				time.Sleep(6 * time.Hour)
-			}
-			println("Error: Failed to refresh puid cookie")
-		}()
-	}
-
 	PORT := os.Getenv("PORT")
 	if PORT == "" {
 		PORT = "8080"
@@ -97,7 +45,7 @@ func proxy(c *gin.Context) {
 	var request *http.Request
 	var response *http.Response
 
-	url = "https://chat.openai.com/backend-api" + c.Param("path")
+	url = "https://api.openai.com" + c.Param("path")
 	request_method = c.Request.Method
 
 	request, err = http.NewRequest(request_method, url, c.Request.Body)
@@ -112,22 +60,6 @@ func proxy(c *gin.Context) {
 	request.Header.Set("Keep-Alive", "timeout=360")
 	request.Header.Set("user-agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36")
 	request.Header.Set("Authorization", c.Request.Header.Get("Authorization"))
-	if c.Request.Header.Get("Puid") != "" {
-		request.AddCookie(
-			&http.Cookie{
-				Name:  "_puid",
-				Value: puid,
-			},
-		)
-	} else {
-		request.AddCookie(
-			&http.Cookie{
-				Name:  "_puid",
-				Value: c.Request.Header.Get("Puid"),
-			},
-		)
-	}
-
 	response, err = client.Do(request)
 	if err != nil {
 		c.JSON(500, gin.H{"error": err.Error()})
