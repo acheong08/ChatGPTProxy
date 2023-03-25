@@ -8,7 +8,6 @@ import (
 	http "github.com/bogdanfinn/fhttp"
 	tls_client "github.com/bogdanfinn/tls-client"
 
-	"github.com/fvbock/endless"
 	"github.com/gin-gonic/gin"
 )
 
@@ -95,7 +94,7 @@ func main() {
 
 	handler.Any("/api/*path", proxy)
 
-	endless.ListenAndServe(os.Getenv("HOST")+":"+PORT, handler)
+	handler.Run(os.Getenv("HOST") + ":" + PORT)
 }
 
 func proxy(c *gin.Context) {
