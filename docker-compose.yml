@@ -1,0 +1,9 @@
+version: '3.3'
+services:
+    chatgpt-proxy:
+        image: chatgpt-proxy-v4
+        container_name: chatgpt-proxy-v4
+        ports:
+            - '8080:8080'
+        env_file:
+        - .env
