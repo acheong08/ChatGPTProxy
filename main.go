@@ -106,7 +106,7 @@ func proxy(c *gin.Context) {
 	var request *http.Request
 	var response *http.Response
 
-	url = "https://chat.openai.com/backend-api" + c.Param("path")
+	url = "https://chat.openai.com/api" + c.Param("path")
 	request_method = c.Request.Method
 
 	request, err = http.NewRequest(request_method, url, c.Request.Body)
