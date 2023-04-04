@@ -23,12 +23,18 @@ var (
 	client, _    = tls_client.NewHttpClient(tls_client.NewNoopLogger(), options...)
 	access_token = os.Getenv("ACCESS_TOKEN")
 	puid         = os.Getenv("PUID")
+	http_proxy        = os.Getenv("http_proxy")
 )
 
 func main() {
 	if access_token == "" && puid == "" {
 		println("Error: ACCESS_TOKEN and PUID are not set")
 		return
+	}
+
+	if http_proxy != "" {
+		client.SetProxy(http_proxy)
+		println("Proxy set:" + http_proxy)
 	}
 	// Automatically refresh the puid cookie
 	if access_token != "" {
