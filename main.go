@@ -23,7 +23,7 @@ var (
 	client, _    = tls_client.NewHttpClient(tls_client.NewNoopLogger(), options...)
 	access_token = os.Getenv("ACCESS_TOKEN")
 	puid         = os.Getenv("PUID")
-	http_proxy        = os.Getenv("http_proxy")
+	http_proxy   = os.Getenv("http_proxy")
 )
 
 func main() {
@@ -112,7 +112,11 @@ func proxy(c *gin.Context) {
 	var request *http.Request
 	var response *http.Response
 
-	url = "https://chat.openai.com/backend-api" + c.Param("path")
+	if c.Request.URL.RawQuery != "" {
+		url = "https://chat.openai.com/backend-api" + c.Param("path") + "?" + c.Request.URL.RawQuery
+	} else {
+		url = "https://chat.openai.com/backend-api" + c.Param("path")
+	}
 	request_method = c.Request.Method
 
 	request, err = http.NewRequest(request_method, url, c.Request.Body)
