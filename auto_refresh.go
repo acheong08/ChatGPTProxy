@@ -56,7 +56,7 @@ func refresh_puid() {
 }
 
 func refresh_access_token() {
-	authenticator := auth.NewAuthenticator(openai_email, openai_pass, puid, "")
+	authenticator := auth.NewAuthenticator(openai_email, openai_pass, puid, auth_proxy)
 	for {
 		err := authenticator.Begin()
 		if err.Error != nil {
