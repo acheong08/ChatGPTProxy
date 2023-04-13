@@ -60,14 +60,14 @@ func refresh_access_token() {
 	for {
 		err := authenticator.Begin()
 		if err.Error != nil {
-			println("Error: " + err.Error.Error())
+			println("Error: " + err.Details)
 			// Sleep for 30 minutes
 			time.Sleep(30 * time.Minute)
 			continue
 		}
 		access_token, err = authenticator.GetAccessToken()
 		if err.Error != nil {
-			println("Error: " + err.Error.Error())
+			println("Error: " + err.Details)
 			// Sleep for 20 minutes
 			time.Sleep(20 * time.Minute)
 			continue
