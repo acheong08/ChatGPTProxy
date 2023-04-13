@@ -26,6 +26,7 @@ var (
 	http_proxy   = os.Getenv("http_proxy")
 	openai_email = os.Getenv("OPENAI_EMAIL")
 	openai_pass  = os.Getenv("OPENAI_PASS")
+	admin_pass   = os.Getenv("ADMIN_PASS")
 )
 
 func main() {
@@ -60,6 +61,37 @@ func main() {
 	})
 
 	handler.Any("/api/*path", proxy)
+
+	handler.POST("/admin/update", func(c *gin.Context) {
+		if c.Request.Header.Get("Authorization") != admin_pass {
+			c.JSON(401, gin.H{"message": "unauthorized"})
+			return
+		}
+		type Update struct {
+			Value string `json:"value"`
+			Field string `json:"field"`
+		}
+		var update Update
+		c.BindJSON(&update)
+		if update.Field == "puid" {
+			puid = update.Value
+		} else if update.Field == "access_token" {
+			access_token = update.Value
+		} else if update.Field == "http_proxy" {
+			http_proxy = update.Value
+			client.SetProxy(http_proxy)
+		} else if update.Field == "openai_email" {
+			openai_email = update.Value
+		} else if update.Field == "openai_pass" {
+			openai_pass = update.Value
+		} else if update.Field == "admin_pass" {
+			admin_pass = update.Value
+		} else {
+			c.JSON(400, gin.H{"message": "field not found"})
+			return
+		}
+		c.JSON(200, gin.H{"message": "updated"})
+	})
 
 	endless.ListenAndServe(os.Getenv("HOST")+":"+PORT, handler)
 }
