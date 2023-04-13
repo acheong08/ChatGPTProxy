@@ -75,17 +75,23 @@ func main() {
 		c.BindJSON(&update)
 		if update.Field == "puid" {
 			puid = update.Value
+			// export environment variable
+			os.Setenv("PUID", puid)
 		} else if update.Field == "access_token" {
 			access_token = update.Value
+			os.Setenv("ACCESS_TOKEN", access_token)
 		} else if update.Field == "http_proxy" {
 			http_proxy = update.Value
 			client.SetProxy(http_proxy)
 		} else if update.Field == "openai_email" {
 			openai_email = update.Value
+			os.Setenv("OPENAI_EMAIL", openai_email)
 		} else if update.Field == "openai_pass" {
 			openai_pass = update.Value
+			os.Setenv("OPENAI_PASS", openai_pass)
 		} else if update.Field == "admin_pass" {
 			admin_pass = update.Value
+			os.Setenv("ADMIN_PASS", admin_pass)
 		} else {
 			c.JSON(400, gin.H{"message": "field not found"})
 			return
