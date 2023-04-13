@@ -3,15 +3,16 @@ module github.com/acheong08/ChatGPT-Proxy-V4
 go 1.20
 
 require (
-	github.com/bogdanfinn/fhttp v0.5.18
-	github.com/bogdanfinn/tls-client v1.3.6
+	github.com/acheong08/OpenAIAuth v0.0.0-20230404125145-978e2599a89b
+	github.com/bogdanfinn/fhttp v0.5.19
+	github.com/bogdanfinn/tls-client v1.3.8
 	github.com/fvbock/endless v0.0.0-20170109170031-447134032cb6
 	github.com/gin-gonic/gin v1.9.0
 )
 
 require (
 	github.com/andybalholm/brotli v1.0.4 // indirect
-	github.com/bogdanfinn/utls v1.5.14 // indirect
+	github.com/bogdanfinn/utls v1.5.15 // indirect
 	github.com/bytedance/sonic v1.8.0 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20221115062448-fe3a3abad311 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
