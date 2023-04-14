@@ -102,7 +102,7 @@ func main() {
 		}
 		c.JSON(200, gin.H{"message": "updated"})
 	})
-
+	gin.SetMode(gin.ReleaseMode)
 	endless.ListenAndServe(os.Getenv("HOST")+":"+PORT, handler)
 }
 
