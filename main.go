@@ -20,20 +20,12 @@ var (
 		tls_client.WithCookieJar(jar), // create cookieJar instance and pass it as argument
 	}
 	client, _    = tls_client.NewHttpClient(tls_client.NewNoopLogger(), options...)
-	access_token = os.Getenv("ACCESS_TOKEN")
+	admin_pass   = os.Getenv("ADMIN_PASS")
 	cf_clearance = os.Getenv("CF_CLEARANCE")
 	http_proxy   = os.Getenv("http_proxy")
-	auth_proxy   = os.Getenv("auth_proxy")
-	openai_email = os.Getenv("OPENAI_EMAIL")
-	openai_pass  = os.Getenv("OPENAI_PASS")
-	admin_pass   = os.Getenv("ADMIN_PASS")
 )
 
 func main() {
-	if access_token == "" && cf_clearance == "" && openai_email == "" && openai_pass == "" {
-		println("Error: Authentication information not found.")
-		return
-	}
 
 	if http_proxy != "" {
 		client.SetProxy(http_proxy)
@@ -66,26 +58,8 @@ func main() {
 			cf_clearance = update.Value
 			// export environment variable
 			os.Setenv("CF_CLEARANCE", cf_clearance)
-		} else if update.Field == "access_token" {
-			access_token = update.Value
-			os.Setenv("ACCESS_TOKEN", access_token)
-		} else if update.Field == "http_proxy" {
-			http_proxy = update.Value
-			client.SetProxy(http_proxy)
-		} else if update.Field == "openai_email" {
-			openai_email = update.Value
-			os.Setenv("OPENAI_EMAIL", openai_email)
-		} else if update.Field == "openai_pass" {
-			openai_pass = update.Value
-			os.Setenv("OPENAI_PASS", openai_pass)
-		} else if update.Field == "admin_pass" {
-			admin_pass = update.Value
-			os.Setenv("ADMIN_PASS", admin_pass)
-		} else if update.Field == "auth_proxy" {
-			auth_proxy = update.Value
-			os.Setenv("auth_proxy", auth_proxy)
 		} else {
-			c.JSON(400, gin.H{"message": "field not found"})
+			c.JSON(400, gin.H{"message": "invalid field"})
 			return
 		}
 		c.JSON(200, gin.H{"message": "updated"})
