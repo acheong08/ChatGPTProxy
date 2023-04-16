@@ -3,7 +3,6 @@ module github.com/acheong08/ChatGPT-Proxy-V4
 go 1.20
 
 require (
-	github.com/acheong08/OpenAIAuth v0.0.0-20230404125145-978e2599a89b
 	github.com/bogdanfinn/fhttp v0.5.19
 	github.com/bogdanfinn/tls-client v1.3.8
 	github.com/fvbock/endless v0.0.0-20170109170031-447134032cb6

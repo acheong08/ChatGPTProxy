@@ -3,7 +3,6 @@ package main
 import (
 	"io"
 	"os"
-	"time"
 
 	http "github.com/bogdanfinn/fhttp"
 	tls_client "github.com/bogdanfinn/tls-client"
@@ -22,7 +21,7 @@ var (
 	}
 	client, _    = tls_client.NewHttpClient(tls_client.NewNoopLogger(), options...)
 	access_token = os.Getenv("ACCESS_TOKEN")
-	puid         = os.Getenv("PUID")
+	cf_clearance = os.Getenv("CF_CLEARANCE")
 	http_proxy   = os.Getenv("http_proxy")
 	auth_proxy   = os.Getenv("auth_proxy")
 	openai_email = os.Getenv("OPENAI_EMAIL")
@@ -31,7 +30,7 @@ var (
 )
 
 func main() {
-	if access_token == "" && puid == "" && openai_email == "" && openai_pass == "" {
+	if access_token == "" && cf_clearance == "" && openai_email == "" && openai_pass == "" {
 		println("Error: Authentication information not found.")
 		return
 	}
@@ -39,17 +38,6 @@ func main() {
 	if http_proxy != "" {
 		client.SetProxy(http_proxy)
 		println("Proxy set:" + http_proxy)
-	}
-	// Automatically refresh the puid cookie
-	if openai_email != "" && openai_pass != "" {
-		go refresh_access_token()
-	} else if access_token != "" {
-		go func() {
-			for {
-				refresh_puid()
-				time.Sleep(6 * time.Hour)
-			}
-		}()
 	}
 
 	PORT := os.Getenv("PORT")
@@ -74,10 +62,10 @@ func main() {
 		}
 		var update Update
 		c.BindJSON(&update)
-		if update.Field == "puid" {
-			puid = update.Value
+		if update.Field == "cf_clearance" {
+			cf_clearance = update.Value
 			// export environment variable
-			os.Setenv("PUID", puid)
+			os.Setenv("CF_CLEARANCE", cf_clearance)
 		} else if update.Field == "access_token" {
 			access_token = update.Value
 			os.Setenv("ACCESS_TOKEN", access_token)
@@ -133,21 +121,12 @@ func proxy(c *gin.Context) {
 	request.Header.Set("Keep-Alive", "timeout=360")
 	request.Header.Set("user-agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36")
 	request.Header.Set("Authorization", c.Request.Header.Get("Authorization"))
-	if c.Request.Header.Get("Puid") == "" {
-		request.AddCookie(
-			&http.Cookie{
-				Name:  "_puid",
-				Value: puid,
-			},
-		)
-	} else {
-		request.AddCookie(
-			&http.Cookie{
-				Name:  "_puid",
-				Value: c.Request.Header.Get("Puid"),
-			},
-		)
-	}
+	request.AddCookie(
+		&http.Cookie{
+			Name:  "cf_clearance",
+			Value: cf_clearance,
+		},
+	)
 
 	response, err = client.Do(request)
 	if err != nil {
