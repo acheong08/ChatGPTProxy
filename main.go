@@ -26,6 +26,11 @@ var (
 )
 
 func main() {
+	if cf_clearance == "" {
+		println("CF_CLEARANCE not set")
+		os.Exit(1)
+	}
+	println(cf_clearance)
 
 	if http_proxy != "" {
 		client.SetProxy(http_proxy)
