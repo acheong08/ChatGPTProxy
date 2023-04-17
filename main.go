@@ -22,12 +22,13 @@ var (
 	client, _    = tls_client.NewHttpClient(tls_client.NewNoopLogger(), options...)
 	admin_pass   = os.Getenv("ADMIN_PASS")
 	cf_clearance = os.Getenv("CF_CLEARANCE")
+	user_agent   = os.Getenv("USER_AGENT")
 	http_proxy   = os.Getenv("http_proxy")
 )
 
 func main() {
-	if cf_clearance == "" {
-		println("CF_CLEARANCE not set")
+	if cf_clearance == "" || user_agent == "" {
+		println("CF_CLEARANCE and USER_AGENT environment variables are required")
 		os.Exit(1)
 	}
 	println(cf_clearance)
@@ -106,7 +107,7 @@ func proxy(c *gin.Context) {
 	request.Header.Set("sec-fetch-mode", "cors")
 	request.Header.Set("sec-fetch-site", "same-origin")
 	request.Header.Set("sec-gpc", "1")
-	request.Header.Set("user-agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36")
+	request.Header.Set("user-agent", user_agent)
 
 	request.AddCookie(
 		&http.Cookie{
