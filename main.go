@@ -3,7 +3,6 @@ package main
 import (
 	"io"
 	"os"
-	"log"
 
 	http "github.com/bogdanfinn/fhttp"
 	tls_client "github.com/bogdanfinn/tls-client"
@@ -91,24 +90,10 @@ func proxy(c *gin.Context) {
 	c.Header("Content-Type", response.Header.Get("Content-Type"))
 	// Get status code
 	c.Status(response.StatusCode)
+	c.Stream(func(w io.Writer) bool {
+		// Write data to client
+		io.Copy(w, response.Body)
+		return false
+	})
 
-	buf := make([]byte, 4096)
-	for {
-		n, err := response.Body.Read(buf)
-		if n > 0 {
-			_, writeErr := c.Writer.Write(buf[:n])
-			if writeErr != nil {
-				log.Printf("Error writing to client: %v", writeErr)
-				break
-			}
-			c.Writer.Flush() // flush buffer to make sure the data is sent to client in time.
-		}
-		if err == io.EOF {
-			break
-		}
-		if err != nil {
-			log.Printf("Error reading from response body: %v", err)
-			break
-		}
-	}
 }
