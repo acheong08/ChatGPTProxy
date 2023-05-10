@@ -2,8 +2,8 @@ package main
 
 import (
 	"io"
-	"os"
 	"log"
+	"os"
 
 	http "github.com/bogdanfinn/fhttp"
 	tls_client "github.com/bogdanfinn/tls-client"
@@ -48,6 +48,8 @@ func main() {
 }
 
 func proxy(c *gin.Context) {
+	// Remove _cfuvid cookie from session
+	jar.SetCookies(c.Request.URL, []*http.Cookie{})
 
 	var url string
 	var err error
@@ -81,6 +83,9 @@ func proxy(c *gin.Context) {
 	request.Header.Set("sec-fetch-site", "same-origin")
 	request.Header.Set("sec-gpc", "1")
 	request.Header.Set("user-agent", user_agent)
+	if os.Getenv("PUID") != "" {
+		request.AddCookie(&http.Cookie{Name: "_puid", Value: os.Getenv("PUID")})
+	}
 
 	response, err = client.Do(request)
 	if err != nil {
