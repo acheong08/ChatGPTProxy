@@ -1,3 +1,3 @@
-# Archived
+# ChatGPT Proxy
 
-This doesn't work anymore. A ton of new fingerprints were added to Cloudflare.
+Gets around cloudflare via TLS spoofing
