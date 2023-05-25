@@ -25,6 +25,14 @@ var (
 	http_proxy = os.Getenv("http_proxy")
 )
 
+func admin(c *gin.Context) {
+	if c.GetHeader("Authorization") != os.Getenv("PASSWORD") {
+		c.String(401, "Unauthorized")
+		return
+	}
+	c.Next()
+}
+
 func main() {
 
 	if http_proxy != "" {
@@ -39,6 +47,37 @@ func main() {
 	handler := gin.Default()
 	handler.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{"message": "pong"})
+	})
+
+	handler.PATCH("/admin/puid", admin, func(c *gin.Context) {
+		// Get the password from the request (json) and update the password
+		type puid_struct struct {
+			PUID string `json:"puid"`
+		}
+		var puid puid_struct
+		err := c.BindJSON(&puid)
+		if err != nil {
+			c.String(400, "puid not provided")
+			return
+		}
+		// Set environment variable
+		os.Setenv("PUID", puid.PUID)
+		c.String(200, "puid updated")
+	})
+	handler.PATCH("/admin/password", admin, func(c *gin.Context) {
+		// Get the password from the request (json) and update the password
+		type password_struct struct {
+			PASSWORD string `json:"password"`
+		}
+		var password password_struct
+		err := c.BindJSON(&password)
+		if err != nil {
+			c.String(400, "password not provided")
+			return
+		}
+		// Set environment variable
+		os.Setenv("PASSWORD", password.PASSWORD)
+		c.String(200, "PASSWORD updated")
 	})
 
 	handler.Any("/api/*path", proxy)
