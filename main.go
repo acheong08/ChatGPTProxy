@@ -123,7 +123,7 @@ func proxy(c *gin.Context) {
 	request.Header.Set("sec-gpc", "1")
 	request.Header.Set("user-agent", user_agent)
 	if os.Getenv("PUID") != "" {
-		request.Header.Set("cookie", "puid="+os.Getenv("PUID")+";")
+		request.Header.Set("cookie", "_puid="+os.Getenv("PUID")+";")
 	}
 
 	response, err = client.Do(request)
