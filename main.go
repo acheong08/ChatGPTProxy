@@ -132,7 +132,10 @@ func proxy(c *gin.Context) {
 		return
 	}
 	defer response.Body.Close()
-	c.Header("Content-Type", response.Header.Get("Content-Type"))
+	// Copy headers from response
+	for k, v := range response.Header {
+		c.Header(k, v[0])
+	}
 	// Get status code
 	c.Status(response.StatusCode)
 
