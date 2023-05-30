@@ -42,13 +42,17 @@ func admin(c *gin.Context) {
 }
 
 func init() {
-	authorizations.OpenAI_Email = os.Getenv("OpenAI_Email")
-	authorizations.OpenAI_Password = os.Getenv("OpenAI_Password")
+	authorizations.OpenAI_Email = os.Getenv("OPENAI_EMAIL")
+	authorizations.OpenAI_Password = os.Getenv("OPENAI_PASSWORD")
 	if authorizations.OpenAI_Email != "" && authorizations.OpenAI_Password != "" {
 		go func() {
 			for {
 				authenticator := auth.NewAuthenticator(authorizations.OpenAI_Email, authorizations.OpenAI_Password, http_proxy)
-				authenticator.Begin()
+				err := authenticator.Begin()
+				if err != nil {
+					log.Println(err)
+					break
+				}
 				puid, err := authenticator.GetPUID()
 				if err != nil {
 					break
@@ -112,8 +116,8 @@ func main() {
 		if err != nil {
 			c.JSON(400, gin.H{"error": "JSON invalid"})
 		}
-		os.Setenv("OpenAI_Email", authorizations.OpenAI_Email)
-		os.Setenv("OpenAI_Password", authorizations.OpenAI_Password)
+		os.Setenv("OPENAI_EMAIL", authorizations.OpenAI_Email)
+		os.Setenv("OPENAI_PASSWORD", authorizations.OpenAI_Password)
 	})
 
 	handler.Any("/api/*path", proxy)
