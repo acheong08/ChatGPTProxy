@@ -54,6 +54,7 @@ func init() {
 					break
 				}
 				os.Setenv("PUID", puid)
+				println(puid)
 				time.Sleep(24 * time.Hour * 7)
 			}
 		}()
