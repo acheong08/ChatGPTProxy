@@ -36,6 +36,7 @@ var (
 func admin(c *gin.Context) {
 	if c.GetHeader("Authorization") != os.Getenv("PASSWORD") {
 		c.String(401, "Unauthorized")
+		c.Abort()
 		return
 	}
 	c.Next()
