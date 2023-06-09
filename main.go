@@ -175,9 +175,6 @@ func proxy(c *gin.Context) {
 	defer response.Body.Close()
 	// Copy headers from response
 	for k, v := range response.Header {
-		if k == "content-encoding" {
-			continue
-		}
 		c.Header(k, v[0])
 	}
 	// Get status code
