@@ -166,6 +166,10 @@ func proxy(c *gin.Context) {
 	if os.Getenv("PUID") != "" {
 		request.Header.Set("cookie", "_puid="+os.Getenv("PUID")+";")
 	}
+	puid_cookie, err := c.Request.Cookie("_puid")
+	if err == nil {
+		request.Header.Set("cookie", "_puid="+puid_cookie.Value+";")
+	}
 
 	response, err = client.Do(request)
 	if err != nil {
