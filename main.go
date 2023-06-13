@@ -44,6 +44,9 @@ func admin(c *gin.Context) {
 }
 
 func init() {
+	if OpenAI_HOST == "" {
+		OpenAI_HOST = "chat.openai.com"
+	}
 	authorizations.OpenAI_Email = os.Getenv("OPENAI_EMAIL")
 	authorizations.OpenAI_Password = os.Getenv("OPENAI_PASSWORD")
 	if authorizations.OpenAI_Email != "" && authorizations.OpenAI_Password != "" {
