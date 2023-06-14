@@ -4,6 +4,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"strings"
 	"time"
 
 	http "github.com/bogdanfinn/fhttp"
@@ -183,6 +184,9 @@ func proxy(c *gin.Context) {
 	defer response.Body.Close()
 	// Copy headers from response
 	for k, v := range response.Header {
+		if strings.ToLower(k) == "content-encoding" {
+			continue
+		}
 		c.Header(k, v[0])
 	}
 	// Get status code
