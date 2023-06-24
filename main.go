@@ -179,6 +179,7 @@ func proxy(c *gin.Context) {
 		}
 		if strings.HasPrefix(request_body["model"].(string), "gpt-4") {
 			request_body["arkose_token"] = arkose_token
+			println("GPT-4!")
 		}
 		body_json, err := json.Marshal(request_body)
 		if err != nil {
