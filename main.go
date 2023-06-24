@@ -77,6 +77,7 @@ func init() {
 			var err error
 			arkose_token, err = get_arkose_token()
 			if err != nil {
+				println(err.Error())
 				time.Sleep(10 * time.Second)
 			}
 			time.Sleep(15 * time.Second)
