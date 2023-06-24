@@ -72,17 +72,6 @@ func init() {
 			}
 		}()
 	}
-	go func() {
-		for {
-			var err error
-			arkose_token, err = get_arkose_token()
-			if err != nil {
-				println(err.Error())
-				time.Sleep(10 * time.Second)
-			}
-			time.Sleep(15 * time.Second)
-		}
-	}()
 }
 
 func main() {
@@ -178,6 +167,10 @@ func proxy(c *gin.Context) {
 			return
 		}
 		if strings.HasPrefix(request_body["model"].(string), "gpt-4") {
+			token, err := get_arkose_token()
+			if err == nil {
+				arkose_token = token
+			}
 			request_body["arkose_token"] = arkose_token
 			println("GPT-4!")
 		}
