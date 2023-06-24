@@ -1,6 +1,8 @@
 package main
 
 import (
+	"bytes"
+	"encoding/json"
 	"io"
 	"log"
 	"os"
@@ -33,6 +35,7 @@ var (
 	http_proxy     = os.Getenv("http_proxy")
 	authorizations auth_struct
 	OpenAI_HOST    = os.Getenv("OPENAI_HOST")
+	arkose_token   string
 )
 
 func admin(c *gin.Context) {
@@ -69,6 +72,16 @@ func init() {
 			}
 		}()
 	}
+	go func() {
+		for {
+			var err error
+			arkose_token, err = get_arkose_token()
+			if err != nil {
+				time.Sleep(10 * time.Second)
+			}
+			time.Sleep(15 * time.Second)
+		}
+	}()
 }
 
 func main() {
@@ -149,10 +162,32 @@ func proxy(c *gin.Context) {
 	}
 	request_method = c.Request.Method
 
-	request, err = http.NewRequest(request_method, url, c.Request.Body)
-	if err != nil {
-		c.JSON(500, gin.H{"error": err.Error()})
-		return
+	if c.Request.URL.Path == "/api/conversation" {
+		var request_body map[string]interface{}
+		if c.Request.Body != nil {
+			err := json.NewDecoder(c.Request.Body).Decode(&request_body)
+			if err != nil {
+				c.JSON(400, gin.H{"error": err.Error()})
+				return
+			}
+		}
+		// Check if "model" is in the request json
+		if _, ok := request_body["model"]; !ok {
+			c.JSON(400, gin.H{"error": "model not provided"})
+			return
+		}
+		if strings.HasPrefix(request_body["model"].(string), "gpt-4") {
+			request_body["arkose_token"] = arkose_token
+		}
+		body_json, err := json.Marshal(request_body)
+		if err != nil {
+			c.JSON(500, gin.H{"error": err.Error()})
+			return
+		}
+		original_body := bytes.NewReader(body_json)
+		request, _ = http.NewRequest(request_method, url, original_body)
+	} else {
+		request, _ = http.NewRequest(request_method, url, c.Request.Body)
 	}
 	request.Header.Set("Host", ""+OpenAI_HOST+"")
 	request.Header.Set("Origin", "https://"+OpenAI_HOST+"/chat")
