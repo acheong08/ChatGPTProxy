@@ -13,12 +13,13 @@ type arkose_response struct {
 }
 
 func get_arkose_token() (string, error) {
-	resp, err := client.Get("https://ai.fakeopen.com/api/arkose/params")
+	resp, err := client.Get("http://127.0.0.1:3000/api/arkose")
 	if err != nil {
 		return "", err
 	}
 	defer resp.Body.Close()
 	payload, _ := io.ReadAll(resp.Body)
+	// println(string(payload))
 	url := "https://tcr9i.chat.openai.com/fc/gt2/public_key/35536E1E-65B4-4D96-9D97-6ADB7EFF8147"
 	req, _ := http.NewRequest(http.MethodPost, url, bytes.NewReader(payload))
 	req.Header.Set("Host", "tcr9i.chat.openai.com")
@@ -26,7 +27,8 @@ func get_arkose_token() (string, error) {
 	req.Header.Set("Accept", "*/*")
 	req.Header.Set("Accept-Language", "en-US,en;q=0.5")
 	req.Header.Set("Accept-Encoding", "gzip, deflate, br")
-	req.Header.Set("Content-Type", "application/json")
+	// form
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	req.Header.Set("Origin", "https://tcr9i.chat.openai.com")
 	req.Header.Set("DNT", "1")
 	req.Header.Set("Connection", "keep-alive")
