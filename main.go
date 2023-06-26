@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io"
 	"log"
 	"os"
@@ -171,6 +172,8 @@ func proxy(c *gin.Context) {
 			token, err := arkose.GetOpenAIToken()
 			if err == nil {
 				arkose_token = token
+			} else {
+				fmt.Println(err)
 			}
 			request_body["arkose_token"] = arkose_token
 			println("GPT-4!")
