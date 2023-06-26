@@ -5,6 +5,7 @@ go 1.20
 require (
 	github.com/acheong08/OpenAIAuth v0.0.0-20230530050836-f2a06cd52911
 	github.com/acheong08/endless v0.0.0-20230529075213-74050cf641c8
+	github.com/acheong08/funcaptcha v0.2.1-0.20230626140502-adeab195a0b3
 	github.com/bogdanfinn/fhttp v0.5.22
 	github.com/bogdanfinn/tls-client v1.3.12
 	github.com/gin-gonic/gin v1.9.0
