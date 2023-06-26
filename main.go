@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	arkose "github.com/acheong08/funcaptcha"
 	http "github.com/bogdanfinn/fhttp"
 	tls_client "github.com/bogdanfinn/tls-client"
 
@@ -167,7 +168,7 @@ func proxy(c *gin.Context) {
 			return
 		}
 		if strings.HasPrefix(request_body["model"].(string), "gpt-4") {
-			token, err := get_arkose_token()
+			token, err := arkose.GetOpenAIToken()
 			if err == nil {
 				arkose_token = token
 			}
