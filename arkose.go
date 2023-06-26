@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"io"
-	"math/rand"
 
 	http "github.com/bogdanfinn/fhttp"
 )
@@ -12,35 +11,6 @@ import (
 type arkose_response struct {
 	Token string `json:"token"`
 }
-
-func random_num(length int) string {
-	chars := "0123456789"
-	var result string
-	for i := 0; i < length; i++ {
-		result += string(chars[rand.Intn(len(chars))])
-	}
-	return result
-}
-
-// func random_int(min, max int) int {
-// 	return min + rand.Intn(max-min)
-// }
-
-// func get_random_hex(length int) string {
-// 	chars := "0123456789abcdef"
-// 	var result string
-// 	for i := 0; i < length; i++ {
-// 		result += string(chars[random_int(0, len(chars))])
-// 	}
-// 	return result
-// }
-// func base64_encode(data string) string {
-// 	return base64.StdEncoding.EncodeToString([]byte(data))
-// }
-
-// func random_float() string {
-// 	return fmt.Sprintf("%f", rand.Float64())
-// }
 
 func get_arkose_token() (string, error) {
 	resp, err := client.Get("https://ai.fakeopen.com/api/arkose/params")
