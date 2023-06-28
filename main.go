@@ -176,7 +176,7 @@ func proxy(c *gin.Context) {
 				fmt.Println(err)
 			}
 			request_body["arkose_token"] = arkose_token
-			println("GPT-4!")
+			println(arkose_token)
 		}
 		body_json, err := json.Marshal(request_body)
 		if err != nil {
