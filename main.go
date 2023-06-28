@@ -74,6 +74,7 @@ func init() {
 			}
 		}()
 	}
+	arkose.SetTLSClient(&client)
 }
 
 func main() {
