@@ -131,12 +131,6 @@ func main() {
 		os.Setenv("OPENAI_EMAIL", authorizations.OpenAI_Email)
 		os.Setenv("OPENAI_PASSWORD", authorizations.OpenAI_Password)
 	})
-
-	handler.GET("/api/arkose", func(ctx *gin.Context) {
-		arkose_form := arkose.GetForm()
-		ctx.JSON(200, gin.H{"form": arkose_form})
-	})
-
 	handler.Any("/api/*path", proxy)
 
 	gin.SetMode(gin.ReleaseMode)
@@ -144,6 +138,12 @@ func main() {
 }
 
 func proxy(c *gin.Context) {
+	if c.Request.URL.Path == "/api/arkose" {
+		arkose_form := arkose.GetForm()
+		c.JSON(200, gin.H{"form": arkose_form})
+		return
+	}
+
 	// Remove _cfuvid cookie from session
 	jar.SetCookies(c.Request.URL, []*http.Cookie{})
 
