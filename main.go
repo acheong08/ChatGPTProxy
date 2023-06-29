@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	arkose "ChatGPTProxy/arkose"
+	arkose "github.com/acheong08/funcaptcha"
 
 	http "github.com/bogdanfinn/fhttp"
 	tls_client "github.com/bogdanfinn/tls-client"
