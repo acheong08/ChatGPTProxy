@@ -139,8 +139,8 @@ func main() {
 
 func proxy(c *gin.Context) {
 	if c.Request.URL.Path == "/api/arkose" {
-		arkose_form := arkose.GetForm()
-		c.JSON(200, gin.H{"form": arkose_form})
+		arkose_form, hex := arkose.GetForm()
+		c.JSON(200, gin.H{"form": arkose_form, "hex": hex})
 		return
 	}
 
