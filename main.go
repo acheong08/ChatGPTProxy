@@ -38,7 +38,6 @@ var (
 	http_proxy     = os.Getenv("http_proxy")
 	authorizations auth_struct
 	OpenAI_HOST    = os.Getenv("OPENAI_HOST")
-	arkose_token   string
 )
 
 func admin(c *gin.Context) {
@@ -133,6 +132,11 @@ func main() {
 		os.Setenv("OPENAI_PASSWORD", authorizations.OpenAI_Password)
 	})
 
+	handler.GET("/api/arkose", func(ctx *gin.Context) {
+		arkose_form := arkose.GetForm()
+		ctx.JSON(200, gin.H{"form": arkose_form})
+	})
+
 	handler.Any("/api/*path", proxy)
 
 	gin.SetMode(gin.ReleaseMode)
@@ -171,14 +175,17 @@ func proxy(c *gin.Context) {
 			return
 		}
 		if strings.HasPrefix(request_body["model"].(string), "gpt-4") {
-			token, err := arkose.GetOpenAIToken()
-			if err == nil {
-				arkose_token = token
-			} else {
-				fmt.Println(err)
+			if _, ok := request_body["arkose_token"]; !ok {
+				token, err := arkose.GetOpenAIToken()
+				var arkose_token string
+				if err == nil {
+					arkose_token = token
+				} else {
+					fmt.Println(err)
+				}
+				request_body["arkose_token"] = arkose_token
+				println(arkose_token)
 			}
-			request_body["arkose_token"] = arkose_token
-			println(arkose_token)
 		}
 		body_json, err := json.Marshal(request_body)
 		if err != nil {
