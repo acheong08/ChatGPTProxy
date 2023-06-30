@@ -28,9 +28,7 @@ func captchaStart(c *gin.Context) {
 		c.JSON(500, gin.H{"error": err.Error()})
 		return
 	}
-	// Get session as JSON
-	session_json, _ := json.Marshal(session)
-	c.JSON(http.StatusNetworkAuthenticationRequired, gin.H{"token": token, "session": string(session_json), "status": "captcha"})
+	c.JSON(http.StatusNetworkAuthenticationRequired, gin.H{"token": token, "session": session, "status": "captcha"})
 }
 
 func captchaVerify(c *gin.Context) {
