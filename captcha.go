@@ -28,7 +28,18 @@ func captchaStart(c *gin.Context) {
 		c.JSON(500, gin.H{"error": err.Error()})
 		return
 	}
-	c.JSON(http.StatusNetworkAuthenticationRequired, gin.H{"token": token, "session": session, "status": "captcha"})
+	// Get form data (check if download_images is true)
+	download_images := c.Query("download_images")
+	var images []string
+	if download_images == "true" {
+		// Get Base64 encoded image
+		images, err = funcaptcha.DownloadChallenge(session.ConciseChallenge.URLs, true)
+		if err != nil {
+			c.JSON(500, gin.H{"error": err.Error()})
+			return
+		}
+	}
+	c.JSON(http.StatusNetworkAuthenticationRequired, gin.H{"token": token, "session": session, "status": "captcha", "images": images})
 }
 
 func captchaVerify(c *gin.Context) {
