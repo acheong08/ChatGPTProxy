@@ -29,7 +29,7 @@ func captchaStart(c *gin.Context) {
 	}
 	// Get session as JSON
 	session_json, _ := json.Marshal(session)
-	c.JSON(200, gin.H{"token": session_json, "status": "captcha"})
+	c.JSON(200, gin.H{"token": token, "session": string(session_json), "status": "captcha"})
 }
 
 func captchaVerify(c *gin.Context) {
