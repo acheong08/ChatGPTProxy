@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"net/http"
 
 	"github.com/acheong08/funcaptcha"
 	"github.com/gin-gonic/gin"
@@ -29,7 +30,7 @@ func captchaStart(c *gin.Context) {
 	}
 	// Get session as JSON
 	session_json, _ := json.Marshal(session)
-	c.JSON(200, gin.H{"token": token, "session": string(session_json), "status": "captcha"})
+	c.JSON(http.StatusNetworkAuthenticationRequired, gin.H{"token": token, "session": string(session_json), "status": "captcha"})
 }
 
 func captchaVerify(c *gin.Context) {
