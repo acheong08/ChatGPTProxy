@@ -143,7 +143,7 @@ func main() {
 
 	// New group for the captcha routes
 	captcha := handler.Group("/captcha")
-	captcha.POST("/start", captchaStart)
+	captcha.GET("/start", captchaStart)
 	captcha.POST("/verify", captchaVerify)
 
 	gin.SetMode(gin.ReleaseMode)
