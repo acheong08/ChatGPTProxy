@@ -75,6 +75,24 @@ func init() {
 		}()
 	}
 	arkose.SetTLSClient(&client)
+	go func() {
+		var newclient tls_client.HttpClient
+		for {
+			options := []tls_client.HttpClientOption{
+				tls_client.WithTimeoutSeconds(360),
+				tls_client.WithClientProfile(tls_client.Firefox_110),
+				tls_client.WithNotFollowRedirects(),
+				tls_client.WithCookieJar(tls_client.NewCookieJar()), // create cookieJar instance and pass it as argument
+			}
+			newclient, _ = tls_client.NewHttpClient(tls_client.NewNoopLogger(), options...)
+			if http_proxy != "" {
+				newclient.SetProxy(http_proxy)
+			}
+			arkose.SetTLSClient(&newclient)
+			//
+			time.Sleep(10 * time.Minute)
+		}
+	}()
 }
 
 func main() {
