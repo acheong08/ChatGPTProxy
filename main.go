@@ -141,16 +141,16 @@ func main() {
 	})
 	handler.Any("/api/*path", proxy)
 
+	// New group for the captcha routes
+	captcha := handler.Group("/captcha")
+	captcha.POST("/start", captchaStart)
+	captcha.POST("/verify", captchaVerify)
+
 	gin.SetMode(gin.ReleaseMode)
 	endless.ListenAndServe(os.Getenv("HOST")+":"+PORT, handler)
 }
 
 func proxy(c *gin.Context) {
-	if c.Request.URL.Path == "/api/arkose" {
-		arkose_form, hex := arkose.GetForm()
-		c.JSON(200, gin.H{"form": arkose_form, "hex": hex})
-		return
-	}
 	var url string
 	var err error
 	var request_method string
@@ -180,7 +180,7 @@ func proxy(c *gin.Context) {
 		}
 		if strings.HasPrefix(request_body["model"].(string), "gpt-4") {
 			if _, ok := request_body["arkose_token"]; !ok {
-				token, err := arkose.GetOpenAIToken()
+				token, _, err := arkose.GetOpenAIToken()
 				var arkose_token string
 				if err != nil {
 					c.JSON(500, gin.H{"error": err.Error()})
