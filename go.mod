@@ -5,7 +5,7 @@ go 1.20
 require (
 	github.com/acheong08/OpenAIAuth v0.0.0-20230530050836-f2a06cd52911
 	github.com/acheong08/endless v0.0.0-20230529075213-74050cf641c8
-	github.com/acheong08/funcaptcha v0.2.1-0.20230629155243-2d44215f1e5f
+	github.com/acheong08/funcaptcha v0.2.1-0.20230629155839-8827dd09430f
 	github.com/bogdanfinn/fhttp v0.5.23
 	github.com/bogdanfinn/tls-client v1.4.0
 	github.com/gin-gonic/gin v1.9.0
@@ -42,5 +42,3 @@ require (
 	google.golang.org/protobuf v1.30.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
-
-replace github.com/acheong08/funcaptcha => ./funcaptcha

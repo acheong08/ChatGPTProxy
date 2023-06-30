@@ -10,6 +10,8 @@ github.com/acheong08/funcaptcha v0.2.1-0.20230629154526-a513e1971666 h1:dpoaa+q6
 github.com/acheong08/funcaptcha v0.2.1-0.20230629154526-a513e1971666/go.mod h1:VupbjtVAODvgyAB3Zo86fOA53G+UAmaV/Rk9jUCGuTU=
 github.com/acheong08/funcaptcha v0.2.1-0.20230629155243-2d44215f1e5f h1:LalZODMl6htSW6kVYz9KOYQ8cmvReVcMoKsL4NjabLY=
 github.com/acheong08/funcaptcha v0.2.1-0.20230629155243-2d44215f1e5f/go.mod h1:VupbjtVAODvgyAB3Zo86fOA53G+UAmaV/Rk9jUCGuTU=
+github.com/acheong08/funcaptcha v0.2.1-0.20230629155839-8827dd09430f h1:gEGfM0naLh2nGxrGQjMBtdLf6UIKUM+rjB4bG2Xhm9c=
+github.com/acheong08/funcaptcha v0.2.1-0.20230629155839-8827dd09430f/go.mod h1:VupbjtVAODvgyAB3Zo86fOA53G+UAmaV/Rk9jUCGuTU=
 github.com/andybalholm/brotli v1.0.5 h1:8uQZIdzKmjc/iuPu7O2ioW48L81FgatrcpfFmiq/cCs=
 github.com/andybalholm/brotli v1.0.5/go.mod h1:fO7iG3H7G2nSZ7m0zPUDn85XEX2GTukHGRSepvi9Eig=
 github.com/bogdanfinn/fhttp v0.5.23 h1:4Xb5OjYArB8GpnUw4A4r5jmt8UW0/Cvey3R9nS2dC9U=
