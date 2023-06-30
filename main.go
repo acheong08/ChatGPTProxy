@@ -180,6 +180,7 @@ func proxy(c *gin.Context) {
 		}
 		if strings.HasPrefix(request_body["model"].(string), "gpt-4") {
 			if _, ok := request_body["arkose_token"]; !ok {
+				log.Println("arkose token not provided")
 				token, _, err := arkose.GetOpenAIToken()
 				var arkose_token string
 				if err != nil {
@@ -188,7 +189,6 @@ func proxy(c *gin.Context) {
 				}
 				arkose_token = token
 				request_body["arkose_token"] = arkose_token
-				println(arkose_token)
 			}
 		}
 		body_json, err := json.Marshal(request_body)
