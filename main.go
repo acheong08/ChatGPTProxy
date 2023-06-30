@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"io"
 	"log"
+	"net/url"
 	"os"
 	"strings"
 	"time"
@@ -69,6 +70,14 @@ func init() {
 				}
 				os.Setenv("PUID", puid)
 				println(puid)
+				client.SetCookies(&url.URL{
+					Host: OpenAI_HOST,
+				}, []*http.Cookie{
+					{
+						Name:  "_puid",
+						Value: puid,
+					},
+				})
 				time.Sleep(24 * time.Hour * 7)
 			}
 		}()
@@ -142,10 +151,6 @@ func proxy(c *gin.Context) {
 		c.JSON(200, gin.H{"form": arkose_form, "hex": hex})
 		return
 	}
-
-	// Remove _cfuvid cookie from session
-	jar.SetCookies(c.Request.URL, []*http.Cookie{})
-
 	var url string
 	var err error
 	var request_method string
@@ -210,9 +215,6 @@ func proxy(c *gin.Context) {
 	request.Header.Set("sec-fetch-site", "same-origin")
 	request.Header.Set("sec-gpc", "1")
 	request.Header.Set("user-agent", user_agent)
-	if os.Getenv("PUID") != "" {
-		request.Header.Set("cookie", "_puid="+os.Getenv("PUID")+";")
-	}
 	if c.Request.Header.Get("PUID") != "" {
 		request.Header.Set("cookie", "_puid="+c.Request.Header.Get("PUID")+";")
 	}
