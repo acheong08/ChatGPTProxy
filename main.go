@@ -82,7 +82,7 @@ func init() {
 			}
 		}()
 	}
-	arkose.SetTLSClient(&client)
+	// arkose.SetTLSClient(&client)
 }
 
 func main() {
