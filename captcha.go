@@ -20,12 +20,12 @@ func captchaStart(c *gin.Context) {
 	}
 	session, err := funcaptcha.StartChallenge(token, hex)
 	if err != nil {
-		c.JSON(500, gin.H{"error": err.Error()})
+		c.JSON(500, gin.H{"error": "unable to log requests"})
 		return
 	}
 	err = session.RequestChallenge(false)
 	if err != nil {
-		c.JSON(500, gin.H{"error": err.Error()})
+		c.JSON(500, gin.H{"error": "failed to request challenge"})
 		return
 	}
 	// Get form data (check if download_images is true)
@@ -35,7 +35,7 @@ func captchaStart(c *gin.Context) {
 		// Get Base64 encoded image
 		images, err = funcaptcha.DownloadChallenge(session.ConciseChallenge.URLs, true)
 		if err != nil {
-			c.JSON(500, gin.H{"error": err.Error()})
+			c.JSON(500, gin.H{"error": "failed to download images"})
 			return
 		}
 	}
