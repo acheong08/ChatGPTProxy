@@ -141,11 +141,6 @@ func main() {
 	})
 	handler.Any("/api/*path", proxy)
 
-	// New group for the captcha routes
-	captcha := handler.Group("/captcha")
-	captcha.GET("/start", captchaStart)
-	captcha.POST("/verify", captchaVerify)
-
 	gin.SetMode(gin.ReleaseMode)
 	endless.ListenAndServe(os.Getenv("HOST")+":"+PORT, handler)
 }
@@ -169,7 +164,7 @@ func proxy(c *gin.Context) {
 		if c.Request.Body != nil {
 			err := json.NewDecoder(c.Request.Body).Decode(&request_body)
 			if err != nil {
-				c.JSON(400, gin.H{"error": err.Error()})
+				c.JSON(400, gin.H{"error": "JSON invalid"})
 				return
 			}
 		}
