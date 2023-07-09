@@ -8,6 +8,8 @@ github.com/acheong08/endless v0.0.0-20230615162514-90545c7793fd h1:oIpfrRhD7Jus4
 github.com/acheong08/endless v0.0.0-20230615162514-90545c7793fd/go.mod h1:0yO7neMeJLvKk/B/fq5votDY8rByrOPDubpvU+6saKo=
 github.com/acheong08/funcaptcha v0.2.1-0.20230701114718-9bebae686f1e h1:LYR0QN4yt8puGJW/VldM81V7C5AdjYYR0CyAOxrpElY=
 github.com/acheong08/funcaptcha v0.2.1-0.20230701114718-9bebae686f1e/go.mod h1:VupbjtVAODvgyAB3Zo86fOA53G+UAmaV/Rk9jUCGuTU=
+github.com/acheong08/funcaptcha v1.9.2 h1:pjOUzT10OfauqVLCVTdP8FCFdtmlihOK3btVvURiQW4=
+github.com/acheong08/funcaptcha v1.9.2/go.mod h1:azmXv2Mfbw5eBOnMw5e1yTMNVyku17klWhGtkHwm7PY=
 github.com/andybalholm/brotli v1.0.5 h1:8uQZIdzKmjc/iuPu7O2ioW48L81FgatrcpfFmiq/cCs=
 github.com/andybalholm/brotli v1.0.5/go.mod h1:fO7iG3H7G2nSZ7m0zPUDn85XEX2GTukHGRSepvi9Eig=
 github.com/bogdanfinn/fhttp v0.5.23 h1:4Xb5OjYArB8GpnUw4A4r5jmt8UW0/Cvey3R9nS2dC9U=
